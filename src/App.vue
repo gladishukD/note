@@ -1,10 +1,29 @@
 <template>
   <div id="app">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+      <div class="navbar-collapse">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <router-link to="/" class="nav-link">
+              Home
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link to="/create" class="nav-link">
+              Create
+            </router-link>
+          </li>
+        </ul>
+      </div>
+    </nav>
     <div id="nav">
       <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/create">Create</router-link>
     </div>
-    <router-view/>
+    <div class="container-fluid">
+      <router-view/>
+    </div>
   </div>
 </template>
 
