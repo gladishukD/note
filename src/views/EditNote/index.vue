@@ -20,7 +20,7 @@
 
         <button type="submit"
                 class="btn btn-primary mx-2">
-            Create
+            Save
         </button>
         <button @click="resetForm()"
                 type="button"

@@ -27,25 +27,28 @@
   </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import { mapActions } from 'vuex'
 
-#nav {
-  padding: 30px;
+import {
+  NOTES_GET_LIST
+} from '@/store/action-types'
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+export default {
+  name: 'app',
+  data () {
+    return {
     }
+  },
+
+  mounted () {
+    this.getNotesList()
+  },
+
+  methods: {
+    ...mapActions({
+      getNotesList: `notes/${NOTES_GET_LIST}`
+    })
   }
 }
-</style>
+</script>

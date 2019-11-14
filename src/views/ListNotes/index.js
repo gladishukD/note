@@ -1,4 +1,4 @@
-import { mapGetters, mapActions } from 'vuex'
+import {mapGetters, mapActions} from 'vuex'
 
 import {
   NOTES_GET_LIST,
@@ -8,12 +8,8 @@ import {
 export default {
   name: 'ListNotes',
 
-  data () {
+  data() {
     return {}
-  },
-
-  mounted () {
-    this.getNotesList()
   },
 
   computed: {

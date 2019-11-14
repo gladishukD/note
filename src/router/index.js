@@ -4,6 +4,7 @@ import Router from 'vue-router'
 // import routes(lazy)
 const ListNotes = () => import('@/views/ListNotes/index.vue')
 const CreateNote = () => import('@/views/CreateNote/index.vue')
+const EditNote = () => import('@/views/EditNote/index.vue')
 
 Vue.use(Router)
 
@@ -22,12 +23,9 @@ export default new Router({
       component: CreateNote
     },
     {
-      path: '/about/:id',
+      path: '/edit/:id',
       name: 'edit-note',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+      component: EditNote
     }
   ]
 })

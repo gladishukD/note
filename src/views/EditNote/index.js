@@ -1,4 +1,4 @@
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 import mainInput from '@/components/main-input/index.vue'
 import mainTextarea from '@/components/main-textarea/index.vue'
@@ -42,10 +42,31 @@ export default {
     mainTextarea
   },
 
+  computed: {
+    ...mapGetters({
+      list: 'notes/list'
+    })
+  },
+
+  mounted () {
+    this.getNoteData()
+  },
+
   methods: {
     ...mapActions({
-      createNote: `notes/${NOTES_CREATE_NOTE}`
+      editNote: `notes/${NOTES_CREATE_NOTE}`
     }),
+
+    getNoteData () {
+      let id = Number(this.$route.params.id)
+
+      this.list.forEach((item, index, key) => {
+        if (index === id) {
+          this.name.value = item.name
+          this.content.value = item.content
+        }
+      })
+    },
 
     resetForm () {
       this.name.value = ''
@@ -62,10 +83,10 @@ export default {
             content: this.content.value
           }
 
-          this.createNote(tempParams)
+          this.editNote(tempParams)
           this.resetForm()
 
-          this.$toaster.success('Нотатка успішно створена.')
+          this.$toaster.success('Нотатка успішно відредагована.')
           this.$router.push({ name: 'list-notes' })
         }
       })

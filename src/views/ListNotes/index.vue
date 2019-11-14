@@ -18,7 +18,7 @@
         <div class="card-body">
             <h5 class="card-title">{{item.name}}</h5>
             <p class="card-text">{{item.content}}</p>
-            <router-link :to="{name: 'edit-note', params: {id: 0}}"
+            <router-link :to="{name: 'edit-note', params: {id: index}}"
                          class="btn btn-primary mx-1">
                 Details
             </router-link>
