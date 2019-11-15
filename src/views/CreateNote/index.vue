@@ -1,9 +1,11 @@
 <template>
-<div class="create-note">
+<div class="row my-3">
     <form  :data-vv-scope="formScope"
            @submit.prevent="submitForm()"
-            class="col-md-4 shadow-sm p-3 mb-5 bg-white rounded">
-        <main-input
+            class="col-md-6 shadow-sm p-3 mb-5 bg-white rounded">
+      <h3> Create </h3>
+
+      <main-input
                 :value="name.value"
                 v-model="name.value"
                 :data="name"

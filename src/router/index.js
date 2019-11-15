@@ -5,6 +5,7 @@ import Router from 'vue-router'
 const ListNotes = () => import('@/views/ListNotes/index.vue')
 const CreateNote = () => import('@/views/CreateNote/index.vue')
 const EditNote = () => import('@/views/EditNote/index.vue')
+const DetailsNote = () => import('@/views/DetailsNote/index.vue')
 
 Vue.use(Router)
 
@@ -26,6 +27,11 @@ export default new Router({
       path: '/edit/:id',
       name: 'edit-note',
       component: EditNote
+    },
+    {
+      path: '/details/:id',
+      name: 'details-note',
+      component: DetailsNote
     }
   ]
 })

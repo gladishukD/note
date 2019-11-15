@@ -15,12 +15,14 @@
             </router-link>
           </li>
         </ul>
+
+        <div class="custom-control custom-switch">
+          <input type="checkbox" v-model="store" class="custom-control-input" id="customSwitch1">
+          <label class="custom-control-label" for="customSwitch1">LocalStorage</label>
+        </div>
       </div>
     </nav>
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/create">Create</router-link>
-    </div>
+
     <div class="container-fluid">
       <router-view/>
     </div>
@@ -38,6 +40,7 @@ export default {
   name: 'app',
   data () {
     return {
+      store: true
     }
   },
 

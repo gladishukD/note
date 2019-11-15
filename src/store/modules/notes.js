@@ -7,7 +7,9 @@ import Vue from 'vue'
 import {
   NOTES_GET_LIST,
   NOTES_CREATE_NOTE,
-  NOTES_REMOVE_NOTE
+  NOTES_REMOVE_NOTE,
+  NOTES_EDIT_NOTE,
+  NOTES_ADD_NOTE_COMMENT
 } from '../action-types'
 
 const state = {
@@ -21,7 +23,9 @@ const getters = {
 const mutations = {
   [NOTES_GET_LIST] () {},
   [NOTES_CREATE_NOTE] () {},
-  [NOTES_REMOVE_NOTE] () {}
+  [NOTES_REMOVE_NOTE] () {},
+  [NOTES_EDIT_NOTE] () {},
+  [NOTES_ADD_NOTE_COMMENT] () {}
 }
 
 const actions = {
@@ -44,7 +48,7 @@ const actions = {
     const tempParams = {
       name: payload.name,
       content: payload.content,
-      comments: {}
+      comments: []
     }
 
     state.list.push(tempParams)
@@ -55,6 +59,27 @@ const actions = {
 
   NOTES_REMOVE_NOTE ({ state, dispatch }, noteIndex) {
     state.list.splice(noteIndex, 1)
+
+    localStorage.setItem('notes', JSON.stringify(state.list))
+  },
+
+  NOTES_EDIT_NOTE ({ state, dispatch }, payload) {
+    dispatch(NOTES_GET_LIST)
+
+    Vue.set(state.list[payload.id], 'name', payload.name)
+    Vue.set(state.list[payload.id], 'content', payload.content)
+
+    localStorage.setItem('notes', JSON.stringify(state.list))
+  },
+
+  NOTES_ADD_NOTE_COMMENT ({ state, dispatch }, payload) {
+    const tempParams = {
+      author: payload.author,
+      content: payload.content,
+      created_at: payload.created_at
+    }
+
+    state.list[payload.id].comments.push(tempParams)
 
     localStorage.setItem('notes', JSON.stringify(state.list))
   }
