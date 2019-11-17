@@ -1,6 +1,7 @@
 <template>
   <div class="row my-3">
-    <form  :data-vv-scope="formScope"
+    <form  v-if="noteItem"
+           :data-vv-scope="formScope"
            @submit.prevent="submitForm()"
             class="col-md-4 shadow-sm p-3 mb-5 bg-white rounded">
         <h3> Edit </h3>
@@ -30,6 +31,13 @@
             Reset
         </button>
     </form>
+      <div v-else class="col-sm-6">
+          <div class="card">
+              <div class="card-body">
+                  <h3 class="card-title">404</h3>
+              </div>
+          </div>
+      </div>
 </div>
 
 </template>

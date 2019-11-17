@@ -1,8 +1,8 @@
 import Vue from 'vue'
-// import Vuex from 'vuex'
 
-// import {
-// } from '../mutations-types'
+import {
+  NOTES_CHANGE_SOURCE_DATABASE
+} from '../mutation-types'
 
 import {
   NOTES_GET_LIST,
@@ -12,12 +12,16 @@ import {
   NOTES_ADD_NOTE_COMMENT
 } from '../action-types'
 
+import { db } from '../../main'
+
 const state = {
-  list: []
+  list: [],
+  sourceOfDatabase: JSON.parse(localStorage.getItem('database'))
 }
 
 const getters = {
-  list: state => state.list
+  list: state => state.list,
+  sourceOfDatabase: state => state.sourceOfDatabase
 }
 
 const mutations = {
@@ -25,51 +29,97 @@ const mutations = {
   [NOTES_CREATE_NOTE] () {},
   [NOTES_REMOVE_NOTE] () {},
   [NOTES_EDIT_NOTE] () {},
-  [NOTES_ADD_NOTE_COMMENT] () {}
+  [NOTES_ADD_NOTE_COMMENT] () {},
+
+  [NOTES_CHANGE_SOURCE_DATABASE] (state, payload) {
+    Vue.set(state, 'sourceOfDatabase', payload)
+    localStorage.setItem('database', payload)
+  }
 }
 
 const actions = {
   NOTES_GET_LIST ({ state }) {
     Vue.set(state, 'list', [])
 
-    if (localStorage.getItem('notes') !== null) {
-      let notesList = JSON.parse(localStorage.getItem('notes'))
+    if (state.sourceOfDatabase) {
+      if (localStorage.getItem('notes') !== null) {
+        let notesList = JSON.parse(localStorage.getItem('notes'))
 
-      Vue.set(state, 'list', notesList)
-      console.log(state.list)
+        Vue.set(state, 'list', notesList)
+        console.log(state.list)
+      } else {
+        Vue.set(state, 'list', [])
+      }
     } else {
-      Vue.set(state, 'list', [])
+      db.collection('notes').get().then((response) => {
+        response.forEach((item) => {
+          let tempData = { id: item.id, ...item.data() }
+
+          state.list.push(tempData)
+        })
+      })
     }
   },
 
   NOTES_CREATE_NOTE ({ state, dispatch }, payload) {
-    dispatch(NOTES_GET_LIST)
-
     const tempParams = {
       name: payload.name,
       content: payload.content,
       comments: []
     }
 
-    state.list.push(tempParams)
     console.log('list', state.list)
 
-    localStorage.setItem('notes', JSON.stringify(state.list))
+    if (state.sourceOfDatabase) {
+      state.list.push(tempParams)
+
+      localStorage.setItem('notes', JSON.stringify(state.list))
+    } else {
+      db.collection('notes').add(tempParams)
+        .then(function (docRef) {
+          state.list.push(tempParams)
+          console.log('Document written with ID: ', docRef.id)
+        })
+        .catch(function (error) {
+          console.error('Error adding document: ', error)
+        })
+    }
   },
 
   NOTES_REMOVE_NOTE ({ state, dispatch }, noteIndex) {
-    state.list.splice(noteIndex, 1)
+    if (state.sourceOfDatabase) {
+      state.list.splice(noteIndex, 1)
 
-    localStorage.setItem('notes', JSON.stringify(state.list))
+      localStorage.setItem('notes', JSON.stringify(state.list))
+    } else {
+      let tempData = [...state.list]
+      tempData.splice(noteIndex, 1)
+
+      db.collection('notes').doc(state.list[noteIndex].id).delete().then(function () {
+        state.list.splice(noteIndex, 1)
+        console.log('Document successfully deleted!')
+      }).catch(function (error) {
+        console.error('Error removing document: ', error)
+      })
+    }
   },
 
   NOTES_EDIT_NOTE ({ state, dispatch }, payload) {
-    dispatch(NOTES_GET_LIST)
-
     Vue.set(state.list[payload.id], 'name', payload.name)
     Vue.set(state.list[payload.id], 'content', payload.content)
 
-    localStorage.setItem('notes', JSON.stringify(state.list))
+    if (state.sourceOfDatabase) {
+      localStorage.setItem('notes', JSON.stringify(state.list))
+    } else {
+      db.collection('notes').doc(state.list[payload.id].id).update({
+        name: payload.name,
+        content: payload.content
+      }).then(function () {
+        console.log('Document successfully deleted!')
+      }).catch(function (error) {
+        console.error('Error removing document: ', error)
+      })
+    }
   },
 
   NOTES_ADD_NOTE_COMMENT ({ state, dispatch }, payload) {
@@ -81,7 +131,19 @@ const actions = {
 
     state.list[payload.id].comments.push(tempParams)
 
-    localStorage.setItem('notes', JSON.stringify(state.list))
+    if (state.sourceOfDatabase) {
+      localStorage.setItem('notes', JSON.stringify(state.list))
+    } else {
+      db.collection('notes').doc(state.list[payload.id].id).set({
+        name: state.list[payload.id].name,
+        content: state.list[payload.id].content,
+        comments: state.list[payload.id].comments
+      }).then(function () {
+        console.log('Document successfully create!')
+      }).catch(function (error) {
+        console.error('Error removing document: ', error)
+      })
+    }
   }
 }
 

@@ -56,6 +56,12 @@
           </li>
         </ul>
       </div>
+
+      <div v-else class="card">
+        <div class="card-body">
+          <h3 class="card-title">404</h3>
+        </div>
+      </div>
     </div>
   </div>
 

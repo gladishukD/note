@@ -33,7 +33,8 @@ export default {
         validation: {
           required: true
         }
-      }
+      },
+      noteItem: null
     }
   },
 
@@ -52,6 +53,12 @@ export default {
     this.getNoteData()
   },
 
+  watch: {
+    list: function (newValue) {
+      this.getNoteData()
+    }
+  },
+
   methods: {
     ...mapActions({
       editNote: `notes/${NOTES_EDIT_NOTE}`
@@ -62,6 +69,8 @@ export default {
 
       this.list.forEach((item, index, key) => {
         if (index === id) {
+          this.noteItem = item
+
           this.name.value = item.name
           this.content.value = item.content
         }

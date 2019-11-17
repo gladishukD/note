@@ -17,8 +17,10 @@
         </ul>
 
         <div class="custom-control custom-switch">
-          <input type="checkbox" v-model="store" class="custom-control-input" id="customSwitch1">
-          <label class="custom-control-label" for="customSwitch1">LocalStorage</label>
+          <input type="checkbox" :checked="sourceDatabase"
+                 @change="e => changeSourceOfDatabase(e.target.checked)"
+                 class="custom-control-input" id="customSwitch1">
+          <label class="custom-control-label" for="customSwitch1">{{sourceDatabase ? 'LocalStorage': 'Firebase'}}</label>
         </div>
       </div>
     </nav>
@@ -30,7 +32,11 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
+
+import {
+  NOTES_CHANGE_SOURCE_DATABASE
+} from '@/store/mutation-types'
 
 import {
   NOTES_GET_LIST
@@ -48,7 +54,23 @@ export default {
     this.getNotesList()
   },
 
+  computed: {
+    ...mapGetters({
+      sourceDatabase: 'notes/sourceOfDatabase'
+    })
+  },
+
+  watch: {
+    sourceDatabase: function (newValue) {
+      this.getNotesList()
+    }
+  },
+
   methods: {
+    ...mapMutations({
+      changeSourceOfDatabase: `notes/${NOTES_CHANGE_SOURCE_DATABASE}`
+    }),
+
     ...mapActions({
       getNotesList: `notes/${NOTES_GET_LIST}`
     })

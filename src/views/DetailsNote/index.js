@@ -57,6 +57,12 @@ export default {
     this.getNoteData()
   },
 
+  watch: {
+    list: function (newValue) {
+      this.getNoteData()
+    }
+  },
+
   methods: {
     ...mapActions({
       editNote: `notes/${NOTES_EDIT_NOTE}`,
@@ -78,7 +84,7 @@ export default {
         if (result) {
           let date = new Date()
           const tempParams = {
-            id: id,
+            id: Number(id),
             author: this.author.value,
             content: this.content.value,
             created_at: date.toLocaleString()
